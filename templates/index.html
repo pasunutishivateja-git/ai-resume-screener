@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Resume Screener</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 900px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        p.subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .input-container {
+            flex: 1;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #34495e;
+        }
+        textarea {
+            width: 100%;
+            height: 250px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: vertical;
+            font-family: 'Courier New', Courier, monospace;
+            box-sizing: border-box;
+        }
+        input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px dashed #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            box-sizing: border-box;
+            margin-top: 10px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-top: 25px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .result-box {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .high-match { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .moderate-match { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+        .low-match { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1> AI Resume Screener</h1>
+    <p class="subtitle">Upload a PDF resume and paste a job description to calculate their semantic match.</p>
+
+    <!-- CRITICAL: enctype="multipart/form-data" allows file uploads -->
+    <form method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <div class="input-container">
+                <label for="job_desc">Job Description</label>
+                <textarea id="job_desc" name="job_desc" placeholder="Paste the job description here..." required></textarea>
+            </div>
+            <div class="input-container">
+                <label for="resume">Upload Resume (PDF only)</label>
+                <!-- This input now asks for a file instead of text -->
+                <input type="file" id="resume" name="resume" accept=".pdf" required>
+            </div>
+        </div>
+        
+        <button type="submit">Calculate Match Score</button>
+    </form>
+
+    {% if score is not none %}
+        <div class="result-box {% if score >= 50 %}high-match{% elif score >= 20 %}moderate-match{% else %}low-match{% endif %}">
+            <h2>Match Score: {{ score }}%</h2>
+            {% if score >= 50 %}
+                <p>Excellent match! This candidate is highly relevant.</p>
+            {% elif score >= 20 %}
+                <p>Moderate match. There are some overlapping skills.</p>
+            {% else %}
+                <p>Low match. This candidate might not be the best fit.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>
